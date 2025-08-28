@@ -2,131 +2,116 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
-  <title>Calculadora de Hora Extra</title>
-  
- 
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#000000" />
   <link rel="manifest" href="manifest.json" />
-  <link rel="icon" href="icon.png" />
-  <link rel="apple-touch-icon" href="icon-180.png" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="theme-color" content="#121212" />
-
+  <link rel="apple-touch-icon" href="icons/icon-180.png" />
+  <title>Calculadora de Hora Extra</title>
   <style>
     :root {
-      --bg: #ffffff;
-      --text: #000000;
-      --card: #f5f5f5;
-      --error: #ffdddd;
-      --button-bg: #007bff;
-      --button-text: #ffffff;
-      --button-hover: #0056b3;
-    }
-
-    @media (prefers-color-scheme: dark) {
-      :root {
-        --bg: #121212;
-        --text: #ffffff;
-        --card: #1e1e1e;
-        --error: #5a1e1e;
-        --button-bg: #1e88e5;
-        --button-text: #ffffff;
-        --button-hover: #1565c0;
-      }
-    }
-
-    * {
-      box-sizing: border-box;
+      --bg-color: #121212;
+      --text-color: #ffffff;
+      --card-bg: #1e1e1e;
+      --input-bg: #2c2c2c;
+      --border-radius: 12px;
     }
 
     body {
+      margin: 0;
+      padding: calc(env(safe-area-inset-top, 0px) + 16px) 16px 16px;
+      background-color: var(--bg-color);
+      color: var(--text-color);
       font-family: Arial, sans-serif;
-      background-color: var(--bg);
-      color: var(--text);
-      padding: 20px;
-      max-width: 500px;
-      margin: auto;
-      font-size: 14px;
-      min-height: 100vh;
-      transition: background-color 0.3s, color 0.3s;
+      display: flex;
+      justify-content: center;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 420px;
     }
 
     h1 {
-      font-size: 18px;
       text-align: center;
+      font-size: 1.5rem;
+      margin-bottom: 30px;
     }
 
-    .grupo {
-      margin-bottom: 20px;
+    h2 {
+      font-size: 1.1rem;
+      margin: 28px 0 12px;
     }
 
     label {
       display: block;
-      margin-top: 10px;
-      margin-bottom: 5px;
+      margin-top: 14px;
+      font-weight: bold;
     }
 
-    input,
-    select,
-    button {
-      padding: 10px;
+    input, select {
       width: 100%;
-      font-size: 16px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      transition: background-color 0.3s, color 0.3s;
+      padding: 10px;
+      margin-top: 4px;
+      border-radius: var(--border-radius);
+      border: none;
+      background-color: var(--input-bg);
+      color: var(--text-color);
+      box-sizing: border-box;
+    }
+
+    /* deixa o select visualmente igual ao input */
+    select {
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      padding-right: 2.5rem;
+      background-image: url("data:image/svg+xml;utf8,<svg fill='white' height='20' viewBox='0 0 24 24' width='20' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
+      background-repeat: no-repeat;
+      background-position: right 0.75rem center;
+      background-size: 1rem;
     }
 
     button {
-      margin-top: 10px;
-      background-color: var(--button-bg);
-      color: var(--button-text);
+      width: 100%;
+      margin-top: 16px;
+      padding: 12px;
+      background-color: #007bff;
+      color: white;
+      font-weight: bold;
       border: none;
+      border-radius: var(--border-radius);
       cursor: pointer;
-      transition: background-color 0.2s;
-    }
-
-    button:hover {
-      background-color: var(--button-hover);
-    }
-
-    button:active {
-      transform: scale(0.98);
     }
 
     .resultado {
-      margin-top: 25px;
-      background-color: var(--card);
-      padding: 15px;
-      border-radius: 8px;
-      transition: background-color 0.3s;
+      margin-top: 24px;
+      padding: 16px;
+      background-color: var(--card-bg);
+      border-radius: var(--border-radius);
+      display: none;
     }
 
-    .erro {
-      background-color: var(--error);
-      padding: 10px;
-      border-radius: 5px;
-      margin-top: 10px;
+    .resultado p { margin: 8px 0; }
+
+    .fade { animation: fadeIn 0.4s ease-in-out; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.98); }
+      to   { opacity: 1; transform: scale(1); }
     }
 
-    .dica {
-      font-size: 12px;
-      color: gray;
-    }
+    .hint { font-size: 12px; opacity: .8; margin: 6px 0 0; }
   </style>
 </head>
 <body>
-  <h1>Calculadora de Hora Extra</h1>
+  <div class="container">
+    <h1>Calculadora de Hora Extra</h1>
 
-  <div class="grupo">
+    <!-- Hora extra -->
     <label for="salario">💰 Salário Bruto (R$):</label>
-    <input type="number" id="salario" step="0.01" placeholder="Ex: 3000" />
-    <p class="dica">Informe seu salário bruto mensal.</p>
+    <input type="number" id="salario" placeholder="Informe seu salário bruto mensal.">
 
     <label for="horas">⏰ Horas Extras Trabalhadas:</label>
-    <input type="number" id="horas" step="0.01" placeholder="Ex: 10" />
-    <p class="dica">Total de horas extras no mês.</p>
+    <input type="number" id="horas" placeholder="Total de horas extras no mês.">
 
     <label for="percentual">📈 Porcentagem da Hora Extra:</label>
     <select id="percentual">
@@ -136,82 +121,172 @@
       <option value="0.8">80%</option>
       <option value="0.9">90%</option>
       <option value="1.0">100%</option>
-      <option value="1.2">120%</option>
+      <option value="2.0">200%</option>
     </select>
 
     <label for="carga">⚙️ Carga Horária Mensal (horas):</label>
-    <input type="number" id="carga" step="1" min="1" value="156" />
-    <p class="dica">Geralmente 156h, 160h ou 220h mensais.</p>
+    <input type="number" id="carga" placeholder="Geralmente 156h, 160h ou 220h mensais.">
+
+    <button onclick="calcular()">Calcular</button>
+    <button onclick="exemplo()">Preencher com exemplo</button>
+
+    <div class="resultado" id="resultado"></div>
+
+    <!-- Férias -->
+    <h2>🗓️ Cálculo de Férias</h2>
+
+    <label for="diasGozo">Dias que vai tirar (20–30):</label>
+    <input type="number" id="diasGozo" min="20" max="30" value="30" />
+
+    <label for="diasVender">Dias a vender (0–10):</label>
+    <select id="diasVender"></select>
+    <p id="hintVenda" class="hint">Você pode vender até 10 dia(s).</p>
+
+    <button onclick="calcularFerias()">Calcular Férias</button>
+    <div class="resultado" id="resultadoFerias"></div>
   </div>
 
-  <button onclick="calcular()">Calcular</button>
-  <button onclick="preencherExemplo()">Preencher com exemplo</button>
-
-  <div id="resultado" class="resultado" style="display:none;"></div>
-  <div id="mensagem" class="erro" style="display:none;"></div>
-
   <script>
-    window.onload = () => {
-      const salario = localStorage.getItem('salario');
-      const horas = localStorage.getItem('horas');
-      const percentual = localStorage.getItem('percentual');
-      const carga = localStorage.getItem('carga');
-
-      if (salario) document.getElementById('salario').value = salario;
-      if (horas) document.getElementById('horas').value = horas;
-      if (percentual) document.getElementById('percentual').value = percentual;
-      if (carga) document.getElementById('carga').value = carga;
-    };
-
-    function preencherExemplo() {
-      document.getElementById('salario').value = 3000;
-      document.getElementById('horas').value = 10;
-      document.getElementById('percentual').value = "0.6";
-      document.getElementById('carga').value = 160;
-      calcular();
-    }
-
+    /* =========================
+       HORA EXTRA
+    ========================== */
     function calcular() {
       const salario = parseFloat(document.getElementById('salario').value);
       const horas = parseFloat(document.getElementById('horas').value);
-      const adicional = parseFloat(document.getElementById('percentual').value);
-      const cargaHorariaMensal = parseFloat(document.getElementById('carga').value);
+      const percentual = parseFloat(document.getElementById('percentual').value);
+      const carga = parseFloat(document.getElementById('carga').value);
+      const resultado = document.getElementById('resultado');
 
-      const resultadoEl = document.getElementById('resultado');
-      const mensagemEl = document.getElementById('mensagem');
-
-      if (isNaN(salario) || isNaN(horas) || isNaN(adicional) || isNaN(cargaHorariaMensal) || cargaHorariaMensal <= 0) {
-        resultadoEl.style.display = 'none';
-        mensagemEl.innerText = '⚠️ Preencha todos os campos corretamente.';
-        mensagemEl.style.display = 'block';
+      if (isNaN(salario) || isNaN(horas) || isNaN(percentual) || isNaN(carga) || carga === 0) {
+        resultado.innerHTML = "<p>⚠️ Preencha todos os campos corretamente.</p>";
+        resultado.style.display = "block";
+        resultado.classList.add("fade");
         return;
       }
 
-      mensagemEl.style.display = 'none';
-      const valorHora = salario / cargaHorariaMensal;
-      const valorHoraExtra = valorHora * (1 + adicional);
-      const total = valorHoraExtra * horas;
+      const valorHora = salario / carga;
+      const valorExtra = valorHora * (1 + percentual);
+      const totalExtras = valorExtra * horas;
 
-      resultadoEl.innerText =
-  `💵 Valor da hora: R$ ${valorHora.toFixed(2)}\n` +
-  `➕ Hora extra (${(adicional * 100).toFixed(0)}%): R$ ${valorHoraExtra.toFixed(2)}\n` +
-  `🧮 Total das horas extras: R$ ${total.toFixed(2)}\n\n` +
-  `📌 Fórmula: (Salário / Carga Horária) × (1 + % adicional)`;
+      resultado.innerHTML = `
+        <p>💵 Valor da hora: R$ ${valorHora.toFixed(2)}</p>
+        <p>➕ Hora extra (${(percentual * 100).toFixed(0)}%): R$ ${valorExtra.toFixed(2)}</p>
+        <p>🧾 Total das horas extras: R$ ${totalExtras.toFixed(2)}</p>
+      `;
+      resultado.style.display = "block";
+      resultado.classList.remove("fade");
+      void resultado.offsetWidth; // reflow para reiniciar animação
+      resultado.classList.add("fade");
 
-
-      resultadoEl.style.display = 'block';
-
-      localStorage.setItem('salario', salario);
-      localStorage.setItem('horas', horas);
-      localStorage.setItem('percentual', adicional);
-      localStorage.setItem('carga', cargaHorariaMensal);
+      localStorage.setItem("dados", JSON.stringify({ salario, horas, percentual, carga }));
     }
 
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('service-worker.js')
-        .then(() => console.log('Service Worker registrado com sucesso.'))
-        .catch(err => console.log('Erro ao registrar Service Worker:', err));
+    function exemplo() {
+      document.getElementById('salario').value = 3000;
+      document.getElementById('horas').value = 10;
+      document.getElementById('percentual').value = 0.6;
+      document.getElementById('carga').value = 160;
     }
+
+    /* =========================
+       FÉRIAS – LIMITE VENDÁVEL
+    ========================== */
+    function inicializarFerias() {
+      const TOTAL_FERIAS = 30;
+      const MAX_VENDA_LEGAL = 10;
+
+      const gozoEl   = document.getElementById('diasGozo');
+      const venderEl = document.getElementById('diasVender');
+      const hintEl   = document.getElementById('hintVenda');
+
+      function numero(n) {
+        const v = Number(n);
+        return Number.isFinite(v) ? v : 0;
+        }
+
+      function limiteMaximoVendavel() {
+        const gozo = numero(gozoEl.value);
+        const sobra = Math.max(0, TOTAL_FERIAS - gozo);
+        return Math.min(MAX_VENDA_LEGAL, sobra);
+      }
+
+      function preencherSelectVender(maxVendavel) {
+        venderEl.innerHTML = '';
+        for (let i = 0; i <= maxVendavel; i++) {
+          const opt = document.createElement('option');
+          opt.value = String(i);
+          opt.textContent = String(i);
+          venderEl.appendChild(opt);
+        }
+      }
+
+      function atualizarLimiteVenda() {
+        const maxVendavel = limiteMaximoVendavel();
+        preencherSelectVender(maxVendavel);
+        if (hintEl) hintEl.textContent = `Você pode vender até ${maxVendavel} dia(s).`;
+      }
+
+      gozoEl.addEventListener('input', atualizarLimiteVenda);
+      gozoEl.addEventListener('change', atualizarLimiteVenda);
+
+      atualizarLimiteVenda();
+    }
+
+    /* =========================
+       FÉRIAS – CÁLCULO
+       (valores aproximados CLT)
+    ========================== */
+    function calcularFerias() {
+      const salario = parseFloat(document.getElementById('salario').value);
+      const diasGozo = parseFloat(document.getElementById('diasGozo').value);
+      const diasVender = parseFloat(document.getElementById('diasVender').value);
+      const res = document.getElementById('resultadoFerias');
+
+      if (isNaN(salario) || isNaN(diasGozo) || isNaN(diasVender) || diasGozo < 20 || diasGozo > 30) {
+        res.innerHTML = "<p>⚠️ Informe salário e dias de férias corretamente.</p>";
+        res.style.display = "block";
+        res.classList.add("fade");
+        return;
+      }
+
+      // Cálculo básico:
+      // - Remuneração dos dias de gozo: (salário/30 * diasGozo) + 1/3 disso
+      // - Abono pecuniário (dias vendidos): (salário/30 * diasVender) + 1/3 disso
+      const valorDia = salario / 30;
+      const remunGozo = valorDia * diasGozo;
+      const adicionalGozo = remunGozo / 3;
+
+      const abono = valorDia * diasVender;
+      const adicionalAbono = abono / 3;
+
+      const totalReceber = remunGozo + adicionalGozo + abono + adicionalAbono;
+
+      res.innerHTML = `
+        <p>📅 Dias de gozo: ${diasGozo}</p>
+        <p>💵 Valor por dia: R$ ${valorDia.toFixed(2)}</p>
+        <p>🎯 Remuneração gozo: R$ ${remunGozo.toFixed(2)} (+ 1/3 = R$ ${adicionalGozo.toFixed(2)})</p>
+        <p>💸 Abono (dias vendidos ${diasVender}): R$ ${abono.toFixed(2)} (+ 1/3 = R$ ${adicionalAbono.toFixed(2)})</p>
+        <p><strong>🧾 Total a receber (aprox.): R$ ${totalReceber.toFixed(2)}</strong></p>
+      `;
+      res.style.display = "block";
+      res.classList.remove("fade");
+      void res.offsetWidth; // reflow para reiniciar animação
+      res.classList.add("fade");
+    }
+
+    /* =========================
+       ONLOAD – carregar dados e iniciar férias
+    ========================== */
+    window.onload = function () {
+      const dados = JSON.parse(localStorage.getItem("dados"));
+      if (dados) {
+        document.getElementById('salario').value = dados.salario ?? '';
+        document.getElementById('horas').value = dados.horas ?? '';
+        document.getElementById('percentual').value = dados.percentual ?? '0.6';
+        document.getElementById('carga').value = dados.carga ?? '';
+      }
+      inicializarFerias();
+    };
   </script>
 </body>
 </html>
